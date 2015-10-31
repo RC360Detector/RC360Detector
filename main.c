@@ -17,8 +17,11 @@
 	Toggles all IO pins at 1Hz
 */
 
+#define F_CPU 8000000
+
 #include <avr/io.h>
 #include <stdint.h>
+#include <util/delay.h>
 
 /* Which analog pin we want to read from.  The pins are labeled "ADC0"
  * "ADC1" etc on the pinout in the data sheet.  In this case ADC_PIN
@@ -37,45 +40,91 @@ uint16_t adc_read(uint8_t adcx);
 //Define functions
 //======================
 void ioinit(void);      //Initializes IO
+void init_pwm(void);
 void delay_ms(uint16_t x); //General purpose delay
 //======================
-
-int main (void)
-{
-    ioinit(); //Setup IO pins and defaults
+void Wait(){
+	uint16_t i;
+	for(i=0;i<50;i++)
+	{
+		_delay_loop_2(0);
+		_delay_loop_2(0);
+		_delay_loop_2(0);
+	}
+}
 /*
-    while(1)
-    {
-		PORTC = 0xFF;
-		PORTB = 0xFF;
-		PORTD = 0xFF;
-		delay_ms(500);
+int main (void){
+    ioinit(); //Setup IO pins and defaults
+	
 
-		PORTC = 0x00;
-		PORTB = 0x00;
-		PORTD = 0x00;
-		delay_ms(500);
-    }
-  */
-	for (;;) {
+	// set prescaler to 8 and starts PWM
 
+//	for (;;) {
+
+//		if (adc_read(ADC_PIN) > ADC_THRESHOLD){
+//			PORTB |= _BV(LED_PIN);
+//		} else {
+//			PORTB &= ~_BV(LED_PIN);
+//		}
+//	} 
+
+	init_pwm();
+	while(1){
+//		OCR1A=316;  //90 degree
+//		Wait();
+//		OCR1A=97;   //0 degree
+//		Wait();
+//		OCR1A=535;  //180 degree
+//		Wait();
+	}
+    return(0);
+}
+*/
+
+
+
+int main(void){
+	
+	DDRD |= (1 << DDD6);
+	// PD6 is now an output
+
+	OCR0A = 128;
+	// set PWM for 50% duty cycle
+
+
+	TCCR0A |= (1 << COM0A1);
+	// set none-inverting mode
+
+	TCCR0A |= (1 << WGM01) | (1 << WGM00);
+	// set fast PWM Mode
+
+	TCCR0B |= (1 << CS02);
+	// set prescaler to 8 and starts PWM
+
+	ioinit();
+	for (;;){
 		if (adc_read(ADC_PIN) > ADC_THRESHOLD){
 			PORTB |= _BV(LED_PIN);
 		} else {
 			PORTB &= ~_BV(LED_PIN);
 		}
-	} 
-    return(0);
+		// we have a working Fast PWM
+	}
+}
+
+void init_pwm(void){
+	TCCR1A|=(1<<COM1A1)|(1<<COM1B1)|(1<<WGM11);        //NON Inverted PWM
+	TCCR1B|=(1<<WGM13)|(1<<WGM12)|(1<<CS11)|(1<<CS10); //PRESCALER=64 MODE 14(FAST PWM)
+	ICR1=4999;  //fPWM=50Hz
+	DDRD |= (1 << DDD6);
+	
+	//DDRD|=(1<<PD4)|(1<<PD5);
 }
 
 void ioinit (void)
 {
-    //1 = output, 0 = input
-    //DDRB = 0b11111111; //All outputs
-    //DDRC = 0b11111111; //All outputs
-    //DDRD = 0b11111110; //PORTD (RX on PD0)
+
 	DDRB  |= _BV(LED_PIN);
-	//ADCSRA |= _BV(ADEN);
 	ADMUX |= (1<<REFS0);
 	//set prescaller to 128 and enable ADC
 	ADCSRA |= (1<<ADPS2)|(1<<ADPS1)|(1<<ADPS0)|(1<<ADEN);
