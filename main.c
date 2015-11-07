@@ -57,8 +57,8 @@ int main(void){
 	// PD2 (PCINT0 pin) is now an input
 
 	
-	EICRA |= (1 << ISC00);    // set INT0 to trigger on ANY logic change
-	EICRA &= ~(1 << ISC01);
+	EICRA &= ~(1 << ISC00);    // set INT0 to trigger on ANY logic change
+	EICRA |= (1 << ISC01);
 	EIMSK |= (1 << INT0);     // Turns on INT0
 
 	DDRD |= (1 << DDD6);
@@ -67,14 +67,11 @@ int main(void){
 	OCR0A = 128;
 	// set PWM for 50% duty cycle
 
-	TCCR0A |= (1 << COM0A1);
-	// set none-inverting mode
 
 	TCCR0A |= (1 << WGM01) | (1 << WGM00);
 	// set fast PWM Mode
 
-	TCCR0B |= (1 << CS02);
-	// set prescaler to 8 and starts PWM
+	
 
 	ioinit();
 	sei();                    // turn on interrupts
@@ -128,5 +125,15 @@ uint16_t adc_read(uint8_t adcx) {
 ISR (INT0_vect)
 {
 	PORTB ^= _BV(INT_LED);
-	_delay_ms(500);
+	if (PIND & (1<<PD2)){		
+		TCCR0A |= (1 << COM0A1);// set none-inverting mode
+		TCCR0B |= (1 << CS02);			
+	} else {
+		// set none-inverting mode
+		TCCR0A &= ~(1 << COM0A1);// set none-inverting mode
+		TCCR0B &= ~(1 << CS02);
+		
+	}
+	// set prescaler to 8 and starts PWM
+	_delay_ms(250);
 }
