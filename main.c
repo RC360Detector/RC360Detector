@@ -18,10 +18,14 @@
  * "ADC1" etc on the pinout in the data sheet.  In this case ADC_PIN
  * being 0 means we want to use ADC0.  On the ATmega328P this is also
  * the same as pin PC0 */
-#define ADC_PIN			0
-#define ADC_THRESHOLD	110
-#define	LED_PIN			PB0
-#define	INT_LED			PB1
+#define ADC_PIN				0
+#define MEDIUM_THRESHOLD	55
+#define CLOSE_THRESHOLD		110
+#define LED1				PD4
+#define LED0				PB2
+#define LED2				PD7
+#define	LED_PIN				PB0
+#define	INT_LED				PB1
 
 int x = 0;
 
@@ -55,14 +59,18 @@ int main(void){
 	
 	DDRD &= ~(1 << DDD2);     // Clear the PD2 pin
 	// PD2 (PCINT0 pin) is now an input
-
 	
-	EICRA &= ~(1 << ISC00);    // set INT0 to trigger on ANY logic change
+	
+	EICRA &= ~(1 << ISC00);    // set INT0 to trigger on falling edge of PD2
 	EICRA |= (1 << ISC01);
+	
 	EIMSK |= (1 << INT0);     // Turns on INT0
 
-	DDRD |= (1 << DDD6);
-	// PD6 is now an output
+
+	DDRD |= (1 << DDD6) | //servo
+			(1 << DDD7) | //red LED			
+			(1 << DDD5) | //blue LED
+			(1 << DDD4);  //green LED
 
 	OCR0A = 128;
 	// set PWM for 50% duty cycle
@@ -75,14 +83,27 @@ int main(void){
 
 	ioinit();
 	sei();                    // turn on interrupts
-
+	PORTB |= _BV(LED2);
+	PORTB |= _BV(LED1);
+	PORTB |= _BV(LED0);
 	for (;;){
-		if (adc_read(ADC_PIN) > ADC_THRESHOLD){
-			PORTB |= _BV(LED_PIN);
+		unsigned adc_val = adc_read(ADC_PIN);
+/*
+		if (adc_val > CLOSE_THRESHOLD){
+			PORTB |= _BV(LED0);
+			PORTB |= _BV(LED1);
+			PORTB |= _BV(LED2);
+
+		} else if (adc_val > MEDIUM_THRESHOLD){
+			PORTB |= _BV(LED1);
+			PORTB |= _BV(LED2);
+			PORTB |= _BV(LED0);			
 		} else {
-			PORTB &= ~_BV(LED_PIN);
+			
 		}
+*/
 	}
+
 }
 
 
@@ -124,7 +145,7 @@ uint16_t adc_read(uint8_t adcx) {
 
 ISR (INT0_vect)
 {
-	PORTB ^= _BV(INT_LED);
+	//PORTB ^= _BV(INT_LED);
 	if (PIND & (1<<PD2)){		
 		TCCR0A |= (1 << COM0A1);// set none-inverting mode
 		TCCR0B |= (1 << CS02);			
