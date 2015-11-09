@@ -8176,8 +8176,8 @@ Source: www.kingbright.com</description>
 <packages>
 <package name="BUZZER_CX-0905C">
 <circle x="0" y="0" radius="4.8" width="0.127" layer="21"/>
-<pad name="P$1" x="0" y="2.5" drill="0.8"/>
-<pad name="P$2" x="0" y="-2.5" drill="0.8"/>
+<pad name="IN" x="0" y="2.5" drill="0.8"/>
+<pad name="OUT" x="0" y="-2.5" drill="0.8"/>
 <wire x1="1.1" y1="4.7" x2="-1.1" y2="4.7" width="0.127" layer="21" curve="180"/>
 <wire x1="0" y1="4.5" x2="0" y2="3.5" width="0.127" layer="21"/>
 <wire x1="0.5" y1="4" x2="-0.5" y2="4" width="0.127" layer="21"/>
@@ -8251,6 +8251,7 @@ Source: www.kingbright.com</description>
 <pad name="P$2" x="3.81" y="0" drill="1"/>
 <text x="-1.27" y="1.27" size="1.27" layer="25">&gt;NAME</text>
 <pad name="P$3" x="7.62" y="0" drill="1"/>
+<text x="-2.032" y="-0.762" size="1.27" layer="21">1</text>
 </package>
 <package name="SOT-223">
 <wire x1="-3.2" y1="-1.7" x2="-0.5" y2="-1.7" width="0.127" layer="21"/>
@@ -8291,7 +8292,7 @@ Source: www.kingbright.com</description>
 <pin name="OUT" x="7.62" y="-2.54" visible="off" length="middle" rot="R180"/>
 <wire x1="-5.08" y1="1.27" x2="-5.08" y2="-1.27" width="0.254" layer="94"/>
 <wire x1="-6.35" y1="0" x2="-3.81" y2="0" width="0.254" layer="94"/>
-<text x="-2.54" y="7.62" size="1.27" layer="97">&gt;NAME</text>
+<text x="-2.54" y="7.62" size="1.27" layer="95">&gt;NAME</text>
 </symbol>
 <symbol name="PCA9306_BREAKOUT">
 <wire x1="-10.16" y1="5.08" x2="10.16" y2="5.08" width="0.254" layer="94"/>
@@ -8342,8 +8343,8 @@ Source: www.kingbright.com</description>
 <devices>
 <device name="" package="BUZZER_CX-0905C">
 <connects>
-<connect gate="G$1" pin="IN" pad="P$1"/>
-<connect gate="G$1" pin="OUT" pad="P$2"/>
+<connect gate="G$1" pin="IN" pad="IN"/>
+<connect gate="G$1" pin="OUT" pad="OUT"/>
 </connects>
 <technologies>
 <technology name=""/>
@@ -13543,7 +13544,7 @@ power source should it be required</text>
 </sheets>
 <errors>
 <approved hash="113,1,139.596,107.846,FRAME1,,,,,"/>
-<approved hash="113,1,152.442,186.495,SV2,,,,,"/>
+<approved hash="113,1,152.442,186.495,SENSOR,,,,,"/>
 <approved hash="113,1,226.06,61.9129,J1,,,,,"/>
 </errors>
 </schematic>

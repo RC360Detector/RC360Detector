@@ -8868,8 +8868,8 @@ new: Attribute TP_SIGNAL_NAME&lt;br&gt;
 <packages>
 <package name="BUZZER_CX-0905C">
 <circle x="0" y="0" radius="4.8" width="0.127" layer="21"/>
-<pad name="P$1" x="0" y="2.5" drill="0.8"/>
-<pad name="P$2" x="0" y="-2.5" drill="0.8"/>
+<pad name="IN" x="0" y="2.5" drill="0.8"/>
+<pad name="OUT" x="0" y="-2.5" drill="0.8"/>
 <wire x1="1.1" y1="4.7" x2="-1.1" y2="4.7" width="0.127" layer="21" curve="180"/>
 <wire x1="0" y1="4.5" x2="0" y2="3.5" width="0.127" layer="21"/>
 <wire x1="0.5" y1="4" x2="-0.5" y2="4" width="0.127" layer="21"/>
@@ -8943,6 +8943,7 @@ new: Attribute TP_SIGNAL_NAME&lt;br&gt;
 <pad name="P$2" x="3.81" y="0" drill="1"/>
 <text x="-1.27" y="1.27" size="1.27" layer="25">&gt;NAME</text>
 <pad name="P$3" x="7.62" y="0" drill="1"/>
+<text x="-2.032" y="-0.762" size="1.27" layer="21">1</text>
 </package>
 <package name="SOT-223">
 <wire x1="-3.2" y1="-1.7" x2="-0.5" y2="-1.7" width="0.127" layer="21"/>
@@ -8983,7 +8984,7 @@ new: Attribute TP_SIGNAL_NAME&lt;br&gt;
 <pin name="OUT" x="7.62" y="-2.54" visible="off" length="middle" rot="R180"/>
 <wire x1="-5.08" y1="1.27" x2="-5.08" y2="-1.27" width="0.254" layer="94"/>
 <wire x1="-6.35" y1="0" x2="-3.81" y2="0" width="0.254" layer="94"/>
-<text x="-2.54" y="7.62" size="1.27" layer="97">&gt;NAME</text>
+<text x="-2.54" y="7.62" size="1.27" layer="95">&gt;NAME</text>
 </symbol>
 <symbol name="PCA9306_BREAKOUT">
 <wire x1="-10.16" y1="5.08" x2="10.16" y2="5.08" width="0.254" layer="94"/>
@@ -9034,8 +9035,8 @@ new: Attribute TP_SIGNAL_NAME&lt;br&gt;
 <devices>
 <device name="" package="BUZZER_CX-0905C">
 <connects>
-<connect gate="G$1" pin="IN" pad="P$1"/>
-<connect gate="G$1" pin="OUT" pad="P$2"/>
+<connect gate="G$1" pin="IN" pad="IN"/>
+<connect gate="G$1" pin="OUT" pad="OUT"/>
 </connects>
 <technologies>
 <technology name=""/>
@@ -13991,20 +13992,6 @@ power source should it be required</text>
 <pinref part="U2" gate="G$1" pin="PB1(OC1A)"/>
 <wire x1="99.06" y1="48.26" x2="109.22" y2="48.26" width="0.1524" layer="91"/>
 <label x="104.14" y="48.26" size="1.778" layer="95"/>
-</segment>
-</net>
-<net name="TP8" class="0">
-<segment>
-<pinref part="SV1" gate="G$1" pin="9"/>
-<wire x1="256.54" y1="190.5" x2="264.16" y2="190.5" width="0.1524" layer="91"/>
-<label x="259.08" y="190.5" size="1.778" layer="95"/>
-</segment>
-</net>
-<net name="TP9" class="0">
-<segment>
-<pinref part="SV1" gate="G$1" pin="10"/>
-<wire x1="256.54" y1="193.04" x2="264.16" y2="193.04" width="0.1524" layer="91"/>
-<label x="259.08" y="193.04" size="1.778" layer="95"/>
 </segment>
 </net>
 <net name="TP4" class="0">
