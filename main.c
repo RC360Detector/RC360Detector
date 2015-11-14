@@ -18,15 +18,15 @@
  * "ADC1" etc on the pinout in the data sheet.  In this case ADC_PIN
  * being 0 means we want to use ADC0.  On the ATmega328P this is also
  * the same as pin PC0 */
-#define ADC_PIN				0
-#define MEDIUM_THRESHOLD	55
-#define CLOSE_THRESHOLD		110
-#define LED1				PD4
-#define LED0				PB2
-#define LED2				PD7
-#define	LED_PIN				PB0
-#define	INT_LED				PB1
-
+#define ADC_PIN			0
+#define ADC_THRESHOLD	110
+#define ADC_NEAR		275
+#define ADC_FAR			55
+#define	LED_PIN			PB0
+#define LED0			PD5			//blue
+#define LED1			PD4
+#define LED2			PD7
+#define	INT_LED			PB1
 int x = 0;
 
 /* This function just keeps the reading code out of the loop itself.
@@ -39,7 +39,7 @@ uint16_t adc_read(uint8_t adcx);
 //Define functions
 //======================
 void ioinit(void);      //Initializes IO
-void init_pwm(void);
+
 void delay_ms(uint16_t x); //General purpose delay
 //======================
 void Wait(){
@@ -86,22 +86,30 @@ int main(void){
 	PORTB |= _BV(LED2);
 	PORTB |= _BV(LED1);
 	PORTB |= _BV(LED0);
+	
+	//intialize pwm to off
+	TCCR0A &= ~(1 << COM0A1);// set none-inverting mode
+	TCCR0B &= ~(1 << CS02);
 	for (;;){
-		unsigned adc_val = adc_read(ADC_PIN);
-/*
-		if (adc_val > CLOSE_THRESHOLD){
-			PORTB |= _BV(LED0);
-			PORTB |= _BV(LED1);
-			PORTB |= _BV(LED2);
-
-		} else if (adc_val > MEDIUM_THRESHOLD){
-			PORTB |= _BV(LED1);
-			PORTB |= _BV(LED2);
-			PORTB |= _BV(LED0);			
-		} else {
-			
+		if(adc_read(ADC_PIN) > ADC_NEAR)
+		{
+			PORTD |= _BV(LED0);			//blue
+			PORTD &= ~_BV(LED1);
+			PORTD &= ~_BV(LED2);
 		}
-*/
+		else if ((adc_read(ADC_PIN) < ADC_NEAR) && (adc_read(ADC_PIN) > ADC_FAR))
+		{
+			PORTD &= ~_BV(LED0);
+			PORTD |= _BV(LED1);
+			PORTD &= ~_BV(LED2);
+		}
+		else if ((adc_read(ADC_PIN) < ADC_FAR))
+		{
+			PORTD &= ~_BV(LED0);
+			PORTD &= ~_BV(LED1);
+			PORTD |= _BV(LED2);
+		}
+
 	}
 
 }
